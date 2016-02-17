@@ -1,0 +1,8 @@
+{
+    "development": {
+    "host": "mysql",
+        "user": "root",
+        "password": "secret-pwd",
+        "database": "test"
+}
+}
