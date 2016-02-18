@@ -1,10 +1,22 @@
 Docker Playground
 =================
 
-Web Container
+This repo includes a set of resources to help get started with Docker.  In order to use the assets in this repo and follow this readme, you should first intsall the [Docker Toolbox.](https://docs.docker.com/mac/step_one/)
+
+The steps below will show you how to deploy a simple web application and MySQL database using Docker containers.  It will show you how to use Docker Compose and finally deploy the same containers on a cloud host. 
+
+Web Image
 -------------
 
+The web image is made up of a simple NodeJs application that displays the time, increments a count in a database and gets the count from the database.  The endpoints of the web application are:
+
+- /      - displays the Date
+- /count - displays the current Count
+- /inc   - increments the Count
+
 **Build Web Image**
+
+The first thing to do is build a Docker image using the [Dockerfile](../web/Dockerfile) stored in the web directory.  
 
     docker build -t mtorrens/web web/
     
@@ -29,7 +41,7 @@ Run a command in the new container.
 
     http://<docker machine ip>:49160/
 
-Data Container
+Data Image
 --------------
     
 **Build Data Only Image**
@@ -49,7 +61,7 @@ Run a command in the new container.
 --name Assign a name to the container
     
     
-MySql Container
+MySql Image
 ---------------
     
 **Run MySQL Image**
