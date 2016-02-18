@@ -1,0 +1,24 @@
+web:
+  build: web/
+  container_name: web
+  ports:
+   - "49160:8080"
+  links:
+   - mysql
+data-only:
+  build: dataOnly/
+  container_name: data-only
+mysql:
+  container_name: mysql
+  image: mysql/mysql-server:latest
+  environment:
+    MYSQL_ROOT_PASSWORD: secret-pwd
+    MYSQL_USER: mysql_username
+    MYSQL_PASSWORD: mysql_password
+    MYSQL_DATABASE: mysql_database_name
+  volumes_from:
+     - data-only
+  volumes:
+    - ./dataBase/conf.d:/etc/mysql/conf.d
+  ports:
+   - "3606:3606"

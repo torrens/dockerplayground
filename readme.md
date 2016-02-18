@@ -71,8 +71,11 @@ MySql Container
 **Run MySQL Client**
 
     mysql -uroot -psecret-pwd
+    
+    CREATE DATABASE test;
+    USE test;
     CREATE TABLE COUNTER(id MEDIUMINT NOT NULL AUTO_INCREMENT, count MEDIUMINT NOT NULL, PRIMARY KEY (id));
-    insert COUNTER (count) values(1); 
+    INSERT COUNTER (count) values(1); 
     
 Web Container
 --------------
@@ -82,7 +85,46 @@ Web Container
     docker run --name web -p 49160:8080 --link mysql:mysql -d mtorrens/web 
     
 --link This means that in our container, the hostname mysql will be linked to the container named mysql. So in our database settings, we can specify mysql as the host.
+ 
+All Together Now
+----------------
+
+    docker-compose up -d
     
+**Bring it down**
+
+    docker-compose down
+    
+On the Cloud
+------------
+
+**Build a DigitalOcean Droplet**
+
+    docker-machine create --driver digitalocean --digitalocean-access-token XXXX docker-sandbox
+    
+  
+**List Docker Machines**
+
+    docker-machine ls    
+
+**SSH Droplet**
+
+    docker-machine ssh docker-sandbox
+    
+**Make the Droplet the Active Docker Host**
+
+    eval $(docker-machine env docker-sandbox)
+
+**Run Docker Compose on Droplet**
+
+    docker-compose up -d
+    
+Then visit url droplet ip:49160
+
+**Stop Docker Host and Remove Droplet**
+
+    docker-machine stop docker-sandbox
+    docker-machine rm docker-sandbox
     
 Miscellaneous Commands
 ----------------------    
