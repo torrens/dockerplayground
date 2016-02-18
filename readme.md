@@ -16,14 +16,19 @@ The web image is made up of a simple NodeJs application that displays the time, 
 
 **Build Web Image**
 
-The first thing to do is build a Docker image using the [Dockerfile](../web/Dockerfile) stored in the web directory.  
+The first thing to do is build a Docker image using the [Dockerfile](web/Dockerfile) stored in the web directory.  This Dockerfile creates a Docker image by installing node, npm, the sample web application and then executes an npm install.
 
     docker build -t mtorrens/web web/
     
 Build the docker image using the Dockerfile in the web directory.
 -t Name and optionally a tag in the 'name:tag' format
+
+You can verify the image has been built by running 
+
+    docker images.
     
 **Run Web Images**
+
 
 Run a command in the new container.  
 
