@@ -20,34 +20,40 @@ The first thing to do is build a Docker image using the [Dockerfile](web/Dockerf
 
     docker build -t mtorrens/web web/
     
-Build the docker image using the Dockerfile in the web directory.
 -t Name and optionally a tag in the 'name:tag' format
 
 You can verify the image has been built by running 
 
-    docker images.
+    docker images
+    
+    REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+    mtorrens/web        latest              2061367ed0c6        1 hour ago          475.7 MB
+    centos              centos6             2e4f3f04a056        1 hour ago          228.9 MB
     
 **Run Web Images**
 
-
-Run a command in the new container.  
+Next create a container from this image on your Docker host.
 
     docker run --name web -p 49160:8080 -d mtorrens/web 
   
 --name Assign a name to the container
--p Publish a container's port(s) to the host
+-p Publish a container's port(s) to the host, map 8080 to 49160.
 -d Run container in background and print container ID
     
-**View Docker Machine IP**
+**Visit Node Application**
+
+First find out the IP address of default Docker host, by running the following command.
 
     docker-machine ip
     
-**Visit Node Application**
+Then visit our web application in your browser.  You should see the current Date displayed in the browser.
 
     http://<docker machine ip>:49160/
 
 Data Image
 --------------
+
+To persist the data we will eventually modify in the database, we need a data only image.  We have a data only [Dockerfile](/dataOnly/Dockerfile) for this.
     
 **Build Data Only Image**
 
@@ -59,33 +65,40 @@ Build the docker image using the Dockerfile in the dataOnly directory.
     
 **Run Data Container**
 
-Run a command in the new container. 
+Now create the data only container.
 
-    docker run --name data mtorrens/data-only
+    docker run --name data -d mtorrens/data-only
         
 --name Assign a name to the container
+-d Run container in background and print container ID
     
     
 MySql Image
 ---------------
-    
-**Run MySQL Image**
+
+There is already an official Docker image for a MySQL database.  So we just need to run it to create our MySQL container.
 
     docker run --name mysql \
             --volumes-from data \
             -p 3606:3606 \
             -e MYSQL_ROOT_PASSWORD=secret-pwd \
-            -e MYSQL_USER=mysql_username \
-            -e MYSQL_PASSWORD=mysql_password \
-            -e MYSQL_DATABASE=mysql_database_name \
             -v `pwd`/dataBase/conf.d:/etc/mysql/conf.d \
             -d mysql/mysql-server:latest
             
-**Run Bash Script on SQL**
+--name Assign a name to the container
+--volumes-from Mount a container as data
+-p Publish a container's port(s) to the host, map 3606 to 3606.
+-e Set an environment variable
+-v Mount local directory inside the container
+-d Run container in background and print container ID
+            
+**Create a new database, table and data to allow the web application to operate**
+
+First get a bash terminal to the MySQL container.
 
     docker exec -it mysql bash
     
-**Run MySQL Client**
+Then start a MySQL terminal and create the assets.
 
     mysql -uroot -psecret-pwd
     
@@ -94,14 +107,27 @@ MySql Image
     CREATE TABLE COUNTER(id MEDIUMINT NOT NULL AUTO_INCREMENT, count MEDIUMINT NOT NULL, PRIMARY KEY (id));
     INSERT COUNTER (count) values(1); 
     
+Stop and start the mysql container to prove the data still exists.  It's the use of the data only container which means the data is persisted.
+
+    docker stop mysql
+    docker start mysql
+    
 Web Container
 --------------
 
-**Run Web Container** 
+To allow the web container to access the mysql container, stop the web container, remove it and re-run it with the link commnad.  When the web container is re-run visiting the website count endpoint should now display the count from the database.
 
+    docker stop web
+    docker rm web
     docker run --name web -p 49160:8080 --link mysql:mysql -d mtorrens/web 
+    http://<docker machine ip>:49160/count
     
+--name Assign a name to the container
+-p Publish a container's port(s) to the host, map 8080 to 49160.
 --link This means that in our container, the hostname mysql will be linked to the container named mysql. So in our database settings, we can specify mysql as the host.
+-d Run container in background and print container ID.
+
+Tested docs to here.
  
 All Together Now
 ----------------
