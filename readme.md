@@ -147,30 +147,29 @@ You can then bring all containers down.
 On the Cloud
 ------------
 
-**Build a DigitalOcean Droplet**
+You can use Docker Machine to build Docker hosts on the cloud.
 
     docker-machine create --driver digitalocean --digitalocean-access-token XXXX docker-sandbox
     
-  
-**List Docker Machines**
+Listing machines should now show you the new cloud host.
 
     docker-machine ls    
 
-**SSH Droplet**
+SSH onto the DigitalOcean droplet.
 
     docker-machine ssh docker-sandbox
     
-**Make the Droplet the Active Docker Host**
+Activate the Droplet as the Active machine.
 
     eval $(docker-machine env docker-sandbox)
 
-**Run Docker Compose on Droplet**
+Run Docker Compose on the droplet.
 
     docker-compose up -d
     
-Then visit url droplet ip:49160
+Then visit url <droplet ip>:49160
 
-**Stop Docker Host and Remove Droplet**
+Then tear down the machine.
 
     docker-machine stop docker-sandbox
     docker-machine rm docker-sandbox
