@@ -132,9 +132,15 @@ Tested docs to here.
 All Together Now
 ----------------
 
+Creating one container at a time is time consuming.  Docker Compose lets you create a number of containers at once.  Docker Compose uses yml files to define the containers to create.  The Docker Compose file can be found [here](docker-compose.yml). Existing containers will need stopped and removed before running Docker Compose.
+
     docker-compose up -d
     
-**Bring it down**
+Then visit our web application in your browser.  You should see the current Date displayed in the browser.
+
+    http://<docker machine ip>:49160/
+    
+You can then bring all containers down.
 
     docker-compose down
     
